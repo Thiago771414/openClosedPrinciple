@@ -15,55 +15,63 @@ O polimorfismo é uma consequência natural do uso de herança e interfaces. Ele
 Em resumo, o Princípio Aberto-Fechado (OCP) promove a extensibilidade do software através do uso de herança, interfaces e polimorfismo. Ao adotar esse princípio, você pode adicionar novos recursos ou funcionalidades sem precisar modificar o código existente, o que torna o software mais flexível, modular e menos propenso a introduzir bugs ao modificar partes já funcionais do sistema.
 
 ```csharp
-using System;
+// Exemplo de aplicação do Princípio Aberto-Fechado (OCP) em C#
 
-// Classe responsável por manipular dados de um estudante
-public class Estudante
+// Classe base abstrata ou interface definindo o comportamento geral
+public abstract class Animal
 {
-    public string Nome { get; set; }
-    public int Idade { get; set; }
-    public int Matricula { get; set; }
+    public abstract void FazerBarulho();
 }
 
-// Classe responsável por persistir os dados do estudante em um banco de dados
-public class EstudanteRepository
+// Classes derivadas adicionando comportamentos específicos
+public class Cachorro : Animal
 {
-    public void SalvarEstudante(Estudante estudante)
+    public override void FazerBarulho()
     {
-        // Lógica para salvar o estudante no banco de dados
-        Console.WriteLine("Estudante salvo no banco de dados.");
+        Console.WriteLine("O cachorro faz 'Au au!'");
     }
 }
 
-// Classe responsável por exibir informações sobre o estudante
-public class EstudanteInfoPrinter
+public class Gato : Animal
 {
-    public void ImprimirInformacoes(Estudante estudante)
+    public override void FazerBarulho()
     {
-        // Lógica para imprimir as informações do estudante
-        Console.WriteLine($"Nome: {estudante.Nome}");
-        Console.WriteLine($"Idade: {estudante.Idade}");
-        Console.WriteLine($"Matrícula: {estudante.Matricula}");
+        Console.WriteLine("O gato faz 'Miau!'");
     }
 }
 
-// Classe principal
+// Classe que usa a classe base ou interface, sem saber a implementação específica
+public class CasaDeAnimais
+{
+    private List<Animal> animais;
+
+    public CasaDeAnimais(List<Animal> animais)
+    {
+        this.animais = animais;
+    }
+
+    public void FazerBarulhoEmTodaCasa()
+    {
+        foreach (var animal in animais)
+        {
+            animal.FazerBarulho();
+        }
+    }
+}
+
+// Exemplo de uso
 public class Program
 {
     public static void Main()
     {
-        Estudante estudante = new Estudante
+        var animais = new List<Animal>
         {
-            Nome = "João",
-            Idade = 20,
-            Matricula = 12345
+            new Cachorro(),
+            new Gato()
         };
 
-        EstudanteRepository repository = new EstudanteRepository();
-        repository.SalvarEstudante(estudante);
-
-        EstudanteInfoPrinter printer = new EstudanteInfoPrinter();
-        printer.ImprimirInformacoes(estudante);
+        var casa = new CasaDeAnimais(animais);
+        casa.FazerBarulhoEmTodaCasa();
     }
 }
 ```
